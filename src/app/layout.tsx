@@ -4,7 +4,8 @@ import '@/styles/base.css';
 import '@/styles/glass.css';
 import '@/styles/sections.css';
 import '@/styles/dock.css';
-
+   import '@/styles/cursor.css';
+   
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 
 export const metadata: Metadata = {

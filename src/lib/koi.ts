@@ -1,14 +1,33 @@
-/** Kolam ikan koi: siluet berwarna Google berenang di canvas fixed. Klik = jatuhkan pelet. */
-const COLORS = ['#4285F4', '#EA4335', '#FBBC05', '#34A853', '#4285F4', '#EA4335', '#FBBC05'];
+/**
+ * Kolam koi. Bentuk, ukuran, dan gerakan: koi awal (badan mengikuti tulang punggung).
+ * Tampilan: siluet lembut seperti painter Flutter, yaitu satu gradien kepala→ekor,
+ * transparan, dan tepinya di-blur (blur-nya lewat CSS `.koi--soft`, bukan ctx.filter). Klik = jatuhkan pelet, ikan terdekat menghampiri.
+ */
+const TAU = Math.PI * 2;
+const ALPHA = 120 / 255; // sama dengan withAlpha(120) di Flutter
+
+// [warna kepala, warna ekor]
+const COLORS: [string, string][] = [
+  ['#4285F4', '#34A853'],
+  ['#EA4335', '#FBBC05'],
+  ['#34A853', '#4285F4'],
+  ['#FBBC05', '#EA4335'],
+  ['#4285F4', '#EA4335'],
+  ['#EA4335', '#4285F4'],
+  ['#34A853', '#FBBC05'],
+];
 const WIDTH = [0.5, 0.85, 1, 1, 0.94, 0.84, 0.72, 0.6, 0.49, 0.4, 0.32, 0.26, 0.2, 0.15];
 const SEGS = WIDTH.length;
-const TAU = Math.PI * 2;
 
 type P = { x: number; y: number };
 type Pellet = P & { age: number };
 type Ripple = P & { age: number };
 
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
+const rgba = (hex: string, a: number) => {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`;
+};
 
 function trace(ctx: CanvasRenderingContext2D, pts: P[]) {
   for (let i = 0; i < pts.length - 1; i++) {
@@ -27,7 +46,7 @@ class Koi {
   size = 11 + Math.random() * 6;
   speed = 32 + Math.random() * 18;
 
-  constructor(readonly color: string, x: number, y: number) {
+  constructor(readonly c1: string, readonly c2: string, x: number, y: number) {
     const len = this.size * 0.5;
     for (let i = 0; i < SEGS; i++) {
       this.seg.push({ x: x - Math.cos(this.ang) * len * i, y: y - Math.sin(this.ang) * len * i });
@@ -103,26 +122,25 @@ class Koi {
     const tipL = fin(2.6, 1.0 + sw * 0.6);
     const tipR = fin(2.6, -1.0 + sw * 0.6);
     const notch = fin(1.5, sw * 0.4);
+    const tailEnd = fin(2.6, sw * 0.6);
 
-    ctx.fillStyle = this.color;
-
-    // sirip dada
-    const f = pts[2];
-    const a = Math.atan2(f.dy, f.dx);
-    const flap = Math.sin(t * 0.9) * 0.25;
-    ctx.globalAlpha = 0.32;
-    for (const k of [1, -1]) {
-      ctx.save();
-      ctx.translate(f.x - f.dy * f.w * k * 0.8, f.y + f.dx * f.w * k * 0.8);
-      ctx.rotate(a + k * (2.5 + flap));
-      ctx.beginPath();
-      ctx.ellipse(s * 0.7, 0, s * 1.1, s * 0.34, 0, 0, TAU);
-      ctx.fill();
-      ctx.restore();
+    // Arah gambar badan (shoelace) → sirip dibuat searah supaya jadi satu bentuk gabungan, bukan lubang
+    const outline = [tip, ...L, tipL, notch, tipR, ...R];
+    let area = 0;
+    for (let i = 0; i < outline.length; i++) {
+      const a = outline[i];
+      const b = outline[(i + 1) % outline.length];
+      area += a.x * b.y - b.x * a.y;
     }
+    const ccw = area < 0;
 
-    // badan + ekor
-    ctx.globalAlpha = 0.5;
+    // Gradien kepala → ekor, transparan
+    const g = ctx.createLinearGradient(tip.x, tip.y, tailEnd.x, tailEnd.y);
+    g.addColorStop(0, rgba(this.c1, ALPHA));
+    g.addColorStop(1, rgba(this.c2, ALPHA));
+    ctx.fillStyle = g;
+
+    // Satu path: badan + ekor + dua sirip dada → alpha tidak menumpuk di area overlap
     ctx.beginPath();
     ctx.moveTo(tip.x, tip.y);
     trace(ctx, L);
@@ -131,23 +149,24 @@ class Koi {
     ctx.lineTo(tipR.x, tipR.y);
     trace(ctx, R);
     ctx.closePath();
-    ctx.fill();
 
-    // totol putih khas koi
-    ctx.fillStyle = '#fff';
-    ctx.globalAlpha = 0.55;
-    for (const i of [3, 6]) {
-      const p = pts[i];
-      ctx.beginPath();
-      ctx.ellipse(p.x, p.y, s * 0.55, s * 0.38, Math.atan2(p.dy, p.dx), 0, TAU);
-      ctx.fill();
+    const f = pts[2];
+    const a = Math.atan2(f.dy, f.dx);
+    const flap = Math.sin(t * 0.9) * 0.25;
+    for (const k of [1, -1]) {
+      const th = a + k * (2.5 + flap);
+      const cx = f.x - f.dy * f.w * k * 0.8 + Math.cos(th) * s * 0.7;
+      const cy = f.y + f.dx * f.w * k * 0.8 + Math.sin(th) * s * 0.7;
+      ctx.moveTo(cx + Math.cos(th) * s * 1.1, cy + Math.sin(th) * s * 1.1);
+      ctx.ellipse(cx, cy, s * 1.1, s * 0.34, th, 0, TAU, ccw);
     }
-    ctx.globalAlpha = 1;
+    ctx.fill();
   }
 }
 
 export class KoiPond {
-  private ctx: CanvasRenderingContext2D;
+  private ctx: CanvasRenderingContext2D; // ikan (di-blur oleh CSS)
+  private fx: CanvasRenderingContext2D; // riak & pelet (tetap tajam)
   private fish: Koi[] = [];
   private pellets: Pellet[] = [];
   private ripples: Ripple[] = [];
@@ -156,19 +175,22 @@ export class KoiPond {
   private w = 0;
   private h = 0;
 
-  constructor(private canvas: HTMLCanvasElement) {
+  constructor(private canvas: HTMLCanvasElement, private fxCanvas: HTMLCanvasElement) {
     this.ctx = canvas.getContext('2d')!;
+    this.fx = fxCanvas.getContext('2d')!;
     this.resize();
-    COLORS.forEach((c) => this.fish.push(new Koi(c, Math.random() * this.w, Math.random() * this.h)));
+    COLORS.forEach(([c1, c2]) => this.fish.push(new Koi(c1, c2, Math.random() * this.w, Math.random() * this.h)));
   }
 
   resize() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     this.w = window.innerWidth;
     this.h = window.innerHeight;
-    this.canvas.width = this.w * dpr;
-    this.canvas.height = this.h * dpr;
-    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    for (const [cv, cx] of [[this.canvas, this.ctx], [this.fxCanvas, this.fx]] as const) {
+      cv.width = this.w * dpr;
+      cv.height = this.h * dpr;
+      cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
   }
 
   /** Jatuhkan pelet; 3 ikan terdekat menghampiri. */
@@ -217,7 +239,10 @@ export class KoiPond {
   }
 
   private draw() {
-    const ctx = this.ctx;
+    this.ctx.clearRect(0, 0, this.w, this.h);
+    this.fish.forEach((f) => f.draw(this.ctx));
+
+    const ctx = this.fx;
     ctx.clearRect(0, 0, this.w, this.h);
 
     ctx.lineWidth = 1.5;
@@ -225,7 +250,7 @@ export class KoiPond {
       for (const delay of [0, 0.25]) {
         const a = r.age - delay;
         if (a <= 0) continue;
-        ctx.strokeStyle = `rgba(91,125,177,${Math.max(0, (1 - a / 1.6) * 0.35)})`;
+        ctx.strokeStyle = `rgba(91,125,177,${Math.max(0, (1 - a / 1.6) * 0.4)})`;
         ctx.beginPath();
         ctx.arc(r.x, r.y, a * 38, 0, TAU);
         ctx.stroke();
@@ -237,11 +262,9 @@ export class KoiPond {
       ctx.globalAlpha = clamp((14 - p.age) / 2, 0, 1);
       ctx.fillStyle = '#8a6a4f';
       ctx.beginPath();
-      ctx.arc(p.x, p.y, 3.2 * pop, 0, TAU);
+      ctx.arc(p.x, p.y, 3.4 * pop, 0, TAU);
       ctx.fill();
     }
     ctx.globalAlpha = 1;
-
-    this.fish.forEach((f) => f.draw(ctx));
   }
 }

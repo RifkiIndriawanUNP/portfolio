@@ -2,12 +2,13 @@
 import { useEffect, useRef } from 'react';
 import { KoiPond } from '@/lib/koi';
 
-/** Canvas koi di belakang seluruh halaman. Klik kiri di luar kartu = jatuhkan pelet. */
+/** Dua canvas: ikan (di-blur lewat CSS) dan efek pelet/riak (tajam). Klik kiri di luar kartu = jatuhkan pelet. */
 export default function KoiBackground() {
-  const ref = useRef<HTMLCanvasElement>(null);
+  const fishRef = useRef<HTMLCanvasElement>(null);
+  const fxRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const pond = new KoiPond(ref.current!);
+    const pond = new KoiPond(fishRef.current!, fxRef.current!);
     pond.start();
     const onResize = () => pond.resize();
     const onClick = (e: MouseEvent) => {
@@ -25,5 +26,10 @@ export default function KoiBackground() {
     };
   }, []);
 
-  return <canvas ref={ref} className="koi" aria-hidden="true" />;
+  return (
+    <>
+      <canvas ref={fishRef} className="koi koi--soft" aria-hidden="true" />
+      <canvas ref={fxRef} className="koi" aria-hidden="true" />
+    </>
+  );
 }

@@ -8,7 +8,7 @@ export default function Projects() {
       <h2 data-reveal="">Project</h2>
       <div className="projects">
         {projects.map((p) => (
-          <Glass key={p.title} radius={40} bezel={26}>
+          <Glass key={p.title} radius={30} bezel={26}>
             <a className="project" href={p.repo} target="_blank" rel="noreferrer">
               <Media src={p.image} alt={p.title} />
               <h3>

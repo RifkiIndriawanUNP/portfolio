@@ -12,11 +12,11 @@ export default function Experience() {
   return (
     <section id="experience" className="section">
       <h2 data-reveal="">Experience</h2>
-      <div className="accordion" style={{ gridTemplateColumns: cols }} onMouseLeave={() => setActive(0)}>
+      <div className="accordion" style={{ gridTemplateColumns: cols }}>
         {experience.map((item, i) => (
           <Glass
             key={item.id}
-            radius={36}
+            radius={15}
             bezel={24}
             className={`panel ${i === active ? 'is-open' : ''}`}
             tabIndex={0}

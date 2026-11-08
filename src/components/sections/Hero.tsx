@@ -3,6 +3,7 @@ import Media from '@/components/ui/Media';
 import { FileIcon, GithubIcon, InstagramIcon, MailIcon } from '@/components/ui/Icons';
 import { profile } from '@/data/profile';
 import type { LinkKey } from '@/types';
+import RotatingGreeting from './RotatingGreeting';
 
 const ICONS: Record<LinkKey, () => React.JSX.Element> = {
   github: GithubIcon,
@@ -14,9 +15,9 @@ const ICONS: Record<LinkKey, () => React.JSX.Element> = {
 export default function Hero() {
   return (
     <section id="home" className="section">
-      <Glass className="hero" radius={46} bezel={32}>
+      <Glass className="hero" radius={32} bezel={32}>
         <Media src={profile.photo} alt={profile.name} className="hero__photo" />
-        <h1>{profile.greeting}</h1>
+        <RotatingGreeting words={profile.greeting} />
         {profile.about.map((p) => (
           <p key={p}>{p}</p>
         ))}

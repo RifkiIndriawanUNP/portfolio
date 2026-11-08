@@ -11,7 +11,15 @@
   gap: 10px;
 }
 
-.nav__track { position: relative; display: flex; flex-direction: column; padding: 6px; touch-action: none; cursor: grab; user-select: none; }
+.nav__track {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 6px 0;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+}
 .nav__track:active { cursor: grabbing; }
 .nav__item {
   position: relative;
@@ -33,7 +41,7 @@
   position: absolute;
   z-index: 1;
   top: 6px;
-  left: 6px;
+  left: 0px;
   width: 56px;
   height: 56px;
   border-radius: 999px;
@@ -49,8 +57,8 @@
   transform: translateY(calc(var(--p, 0) * 56px)) scale(1.28);
   transition: transform 0.14s ease-out;
 }
-.nav--h .nav__track { flex-direction: row; }
-.nav--h .nav__thumb { transform: translateX(calc(var(--p, 0) * 56px)) scale(1); }
+.nav--h .nav__track {  flex-direction: row; padding: 0 6px;  }
+.nav--h .nav__thumb { top: 0; left: 6px; transform: translateX(calc(var(--p, 0) * 56px)) scale(1); }
 .nav--h .nav__thumb.is-drag { transform: translateX(calc(var(--p, 0) * 56px)) scale(1.28); }
 
 .dock__game { width: 56px; height: 56px; }

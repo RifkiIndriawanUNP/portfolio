@@ -7,6 +7,7 @@ type Props = HTMLAttributes<HTMLDivElement> & {
   bezel?: number; // lebar zona refraksi di tepi (px)
   scale?: number; // kekuatan pergeseran
   reveal?: boolean; // ikut efek blur saat scroll
+  blur?: number; // blur
   style?: CSSProperties;
 };
 
@@ -14,7 +15,7 @@ type Props = HTMLAttributes<HTMLDivElement> & {
  * Kartu "liquid glass". Di Chromium: backdrop-filter dengan SVG displacement map (refraksi nyata
  * terhadap koi di belakangnya). Browser lain: frosted glass biasa.
  */
-export default function Glass({ children, className = '', radius = 32, bezel = 24, scale = 56, reveal = true, style, ...rest }: Props) {
+export default function Glass({ children, className = '', radius = 32, bezel = 24, scale = 56, blur = 3, reveal = true, style, ...rest }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const fid = 'g' + useId().replace(/:/g, '');
   const [svgOk, setSvgOk] = useState(false);
@@ -46,7 +47,10 @@ export default function Glass({ children, className = '', radius = 32, bezel = 2
     };
   }, [svgOk, radius, bezel]);
 
-  const filter = svgOk && map ? `url(#${fid}) blur(1.5px) saturate(1.6) brightness(1.04)` : 'blur(16px) saturate(1.6)';
+  const filter =
+  svgOk && map
+    ? `url(#${fid}) blur(${blur}px) saturate(1.6) brightness(1.04)`
+    : `blur(${blur + 12}px) saturate(1.6)`; // browser non-Chromium
 
   return (
     <div

@@ -1,8 +1,8 @@
 export type LinkKey = 'github' | 'cv' | 'email' | 'instagram';
-
+export type Greeting = { text: string; lang: string }; 
 export type Profile = {
   name: string;
-  greeting: string;
+  greeting: Greeting[];
   photo: string;
   about: string[];
   links: { key: LinkKey; label: string; href: string }[];

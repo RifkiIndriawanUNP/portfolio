@@ -53,7 +53,7 @@ export default function Navbar() {
   const active = Math.round(pos);
 
   return (
-    <Glass reveal={false} radius={999} bezel={28} scale={44} className={`nav ${horizontal ? 'nav--h' : ''}`}>
+    <Glass reveal={false} radius={32} bezel={28} scale={44} className={`nav ${horizontal ? 'nav--h' : ''}`}>
       <div
         ref={trackRef}
         className="nav__track"

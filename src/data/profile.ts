@@ -2,7 +2,24 @@ import type { Profile } from '@/types';
 
 export const profile: Profile = {
   name: 'Mohammad Rifki Indriawan',
-  greeting: 'Halo,',
+  greeting: [
+    { text: 'Hello,', lang: 'en' },
+    { text: 'Halo,', lang: 'id' },
+    { text: 'Hola,', lang: 'es' },
+    { text: 'Bonjour,', lang: 'fr' },
+    { text: 'こんにちは、', lang: 'ja' },
+    { text: 'Hallo,', lang: 'de' },
+    { text: '안녕하세요,', lang: 'ko' },
+    { text: 'Ciao,', lang: 'it' },
+    { text: 'Olá,', lang: 'pt' },
+    { text: 'Привет,', lang: 'ru' },
+    { text: '你好，', lang: 'zh' },
+    { text: 'नमस्ते,', lang: 'hi' },
+    { text: 'Merhaba,', lang: 'tr' },
+    { text: 'Xin chào,', lang: 'vi' },
+    { text: 'สวัสดี,', lang: 'th' },
+    { text: 'Sawubona,', lang: 'zu' },
+],
   photo: '/images/profile.jpg',
   about: [
     "My name is Rifki Indriawan. I'm an Informatics Engineering student at Nusa Putra University with a strong interest in Data Science and Software Engineering. I enjoy building web and mobile applications, working with data, and using machine learning to solve real problems.",

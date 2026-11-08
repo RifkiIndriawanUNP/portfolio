@@ -5,6 +5,8 @@ import Experience from '@/components/sections/Experience';
 import Hero from '@/components/sections/Hero';
 import Projects from '@/components/sections/Projects';
 import Quote from '@/components/sections/Quote';
+import Footer from '@/components/layout/Footer';
+   import Cursor from '@/components/effects/Cursor';
 
 export default function Home() {
   return (
@@ -17,7 +19,9 @@ export default function Home() {
         <Experience />
         <Quote />
       </main>
+      <Footer />
       <Dock />
+      <Cursor /> 
     </>
   );
 }
