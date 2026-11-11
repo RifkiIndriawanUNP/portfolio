@@ -19,14 +19,14 @@ export const projects: Project[] = [
     repo: `${gh}/SentimenBerita`,
   },
   {
-    title: 'WTS (Want to Sell, Want to Share)',
+    title: 'WTS (Want to Sell, Want to Share) (WIP)',
     description:
       'A mobile application combining a micro-social network and COD marketplace for Nusa Putra University students. Built with Flutter and Supabase, it enables students to share information, buy, sell, and trade items directly on campus through a centralized platform.',
     image: '/images/projects/wts.png',
     repo: `${gh}/WTS-app`,
   },
   {
-    title: 'Buruhku',
+    title: 'Buruhku (WIP)',
     description:
       'A mobile application connecting clients with daily workers for non-certified jobs, featuring price negotiation through chat and escrow payments. Independently designed and developed, from system analysis to a functional prototype.',
     image: '/images/projects/buruhku.png',

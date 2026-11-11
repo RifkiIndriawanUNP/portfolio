@@ -12,7 +12,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
-  background: #fff;
+  background: #ffff;
   color: var(--ink);
   font-family: var(--font-inter), system-ui, -apple-system, 'Segoe UI', sans-serif;
   line-height: 1.55;
@@ -47,7 +47,7 @@ h2 { font-size: 2.1rem; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 1
   display: grid;
   place-items: center;
   text-align: center;
-  padding: 8px;
+  /*padding: 8px;*/
   color: var(--muted);
   font-size: 0.8rem;
   background: linear-gradient(135deg, #e6eefc, #f4f6fa);

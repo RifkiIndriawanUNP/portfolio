@@ -40,12 +40,18 @@ export default function Experience() {
               {item.period && <small>{item.period}</small>}
               {item.description && <p>{item.description}</p>}
               {item.points && (
-                <ul>
-                  {item.points.map((pt) => (
-                    <li key={pt}>{pt}</li>
-                  ))}
-                </ul>
-              )}
+              <ul>
+                {item.points.map((pt) => {
+                  const isHeading = pt.startsWith('##') && pt.endsWith('##');
+
+                  return (
+                    <li key={pt} className={isHeading ? 'point-heading' : ''}>
+                      {isHeading ? pt.replace(/##/g, '') : pt}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
             </div>
           </Glass>
         ))}

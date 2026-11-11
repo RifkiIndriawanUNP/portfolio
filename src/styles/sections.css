@@ -76,7 +76,17 @@
 .panel__body ul { margin-top: 8px; display: grid; gap: 6px; }
 .panel__body li { position: relative; padding-left: 14px; }
 .panel__body li::before { content: ''; position: absolute; left: 0; top: 0.6em; width: 5px; height: 5px; border-radius: 50%; background: var(--blue); }
+/* Hilangkan bullet pada subjudul */
+.panel__body li.point-heading {
+  padding-left: 0;
+  font-weight: 700;
+  color: var(--ink);
+}
 
+.panel__body li.point-heading::before {
+  display: none;
+  content: none;
+}
 /* ---------- Quote ---------- */
 .quote { padding: 64px 60px; text-align: center; }
 .quote blockquote { font-size: 1.45rem; font-weight: 700; line-height: 1.35; letter-spacing: -0.01em; }
