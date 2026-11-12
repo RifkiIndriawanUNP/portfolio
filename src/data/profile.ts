@@ -28,7 +28,7 @@ export const profile: Profile = {
   ],
   links: [
     { key: 'github', label: 'GitHub', href: 'https://github.com/RifkiIndriawanUNP' },
-    { key: 'cv', label: 'CV', href: '/cv/CV_Mohammad_Rifki_Indriawan.pdf' },
+    { key: 'cv', label: 'CV', href: 'https://drive.google.com/drive/folders/1cf1PupptePdEtVn7IssEIxS-PTLu-4mj?usp=sharing' },
     { key: 'email', label: 'Email', href: 'mailto:rifki.indriawan.skz@gmail.com' },
     { key: 'instagram', label: 'Instagram', href: 'https://instagram.com/m.r.indriawan_' },
   ],
